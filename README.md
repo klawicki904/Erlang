@@ -4,32 +4,33 @@
 
 Proces w Erlangu = lekki, niezależny wątek w maszynie wirtualnej.
 Możemy zobaczyć listę obecnie aktywnych procesów (tylko PIDy) używając funkcji:
-processes().
-Do tworzenia procesu używamy spawn(fun):
-spawn(fun() -> io:format("hello~n") end ).
-lub spawn(moduł, funkcja, lista_argumentów):
-spawn(server, loop, []).
+`processes().`
+Do tworzenia procesu używamy `spawn(fun)`:
+`spawn(fun() -> io:format("hello~n") end ).`
+lub `spawn(moduł, funkcja, lista_argumentów)`:
+`spawn(server, loop, []).`
 spawn zwraca ID procesu (PID)
-
+```
 Przykładowy moduł:
-  -module(spawndemo).
-  -export([start/0, say/2]).
-  
-  say(What, 0) ->
+-module(spawndemo).
+-export([start/0, say/2]).
+
+say(What, 0) ->
     done;
-  say(What, Times) ->
+say(What, Times) ->
     io:format("~p~n", [What]),
     say(What, Times - 1).
 
-  start() ->
+start() ->
     spawn(spawndemo, say, [hello, 3]),
     spawn(spawndemo, say, [goodbye, 3]).
-
+```
 
 
 Cała komunikacja między procesami odbywa się przez asynchroniczne sygnały. Najczęściej występującymi sygnałami są wiadomości (message signals).
 
 Do otrzymania wiadomości używamy wyrażenia
+```
 receive
    Format_wiadomości1 ->
        Reakcja1;
@@ -39,8 +40,8 @@ receive
    Format_wiadomościN ->
        ReakcjaN
 end.
-
-self() zwraca ID procesu (PID).
+```
+`self()` zwraca ID procesu (PID).
 
 Do wysyłania wiadomości używamy operatora "!" w formacie Pid ! Wiadomość
 np.
