@@ -43,11 +43,12 @@ end.
 ```
 `self()` zwraca ID procesu (PID).
 
-Do wysyłania wiadomości używamy operatora "!" w formacie Pid ! Wiadomość
+Do wysyłania wiadomości używamy operatora `!` w formacie `Pid ! Wiadomość`
 np.
-receive {Client, {Str, echo}} -> Client ! {self(), Str} end.
+`receive {Client, {Str, echo}} -> Client ! {self(), Str} end.`
 
 Przykładowy serwer:
+```
 -module(server).
 -export([start/0, loop/0]).
 
@@ -71,9 +72,10 @@ loop() ->
 	end,
 % uruchom funkcję jeszcze raz
 	loop().
-
+```
 
 Przykładowe wysłanie i odebranie wiadomości w konsoli:
+```
 % kompilacja serwera
 c(server).
 % PID serwera przypisany do zmiennej
@@ -82,9 +84,10 @@ Server = server:start().
 Server ! {self(), {"Hello", uppercase}}.
 % odebranie wiadomości z kolejki
 receive X -> X end.
-
+```
 
 Przykładowy klient:
+```
 -module(client).
 -export([run/3]).
 
@@ -97,9 +100,9 @@ run(Server, Str, Command) ->
 	after 2000 ->
 		io:format("Timeout~n")
 	end.
-
+```
 Przykładowe uruchomienie klienta:
-client:run(self(), "Hello", uppercase).
+`client:run(self(), "Hello", uppercase).`
 
 ---------------------
 
@@ -107,12 +110,13 @@ Zadanie:
 Moduł będzie miał 3 funkcje:
 start(), ping(N, Pong_PID), pong().
 Po wywołaniu start():
-Ping wysyła wiadomość do pong, pong odbiera wiadomość i wyświetla "Pong received ping".
-Pong odsyła wiadomość do ping. Ping odbiera wiadomość i wyświetla "Ping received pong".
+Ping wysyła wiadomość do pong, pong odbiera wiadomość i wyświetla `Pong received ping`.
+Pong odsyła wiadomość do ping. Ping odbiera wiadomość i wyświetla `Ping received pong`.
 Powtarza się jeszcze 2 (N-1) razy (można ustawić na sztywno liczbę razy w start lub zrobić start z jednym argumentem).
 Na koniec oba procesy kończą działanie.
 
 przykład:
+```
 1> pingpong:start().
 <0.98.0>
 Pong received ping
@@ -123,28 +127,30 @@ Pong received ping
 Ping received pong
 ping finished
 Pong finished
-
+```
 ---------------------
 
-register(atom, Pid) pozwala przypisać wartość Pid do atomu wewnątrz modułu. Przydatne, gdy procesy są uruchamiane w jednym module niezależnie od siebie, szczególnie na różnych komputerach.
+`register(atom, Pid)` pozwala przypisać wartość Pid do atomu wewnątrz modułu. Przydatne, gdy procesy są uruchamiane w jednym module niezależnie od siebie, szczególnie na różnych komputerach.
 
-registered() zwraca listę zarejestrowanych nazw.
+`registered()` zwraca listę zarejestrowanych nazw.
 
 Zadanie:
 Przeróbcie zadanie z ping i pong tak, żeby ping był wywoływany z jednym argumentem N, bez Pong_PID (użyć funkcji register).
------------------------------------------
+--------------------
+
 Link, awarie, monitor:
 
-link(PID) pozwala połączyć się obecnemu procesowi z drugim procesem w taki sposób, że gdy jeden z nich zakończy działanie nieoczekiwanie (błąd/exit()/nieobsłużony wyjątek), to wysyła komunikat {'EXIT', PID, powód} do drugiego procesu (wtedy drugi domyślnie też wymusi zatrzymanie).
+`link(PID)` pozwala połączyć się obecnemu procesowi z drugim procesem w taki sposób, że gdy jeden z nich zakończy działanie nieoczekiwanie (błąd/exit()/nieobsłużony wyjątek), to wysyła komunikat `{'EXIT', PID, powód}` do drugiego procesu (wtedy drugi domyślnie też wymusi zatrzymanie).
 
-unlink(PID) usuwa link
+`unlink(PID)` usuwa link
 
-spawn_link(fun) lub spawn_link(moduł, funkcja, lista_argumentów) = spawn + link
+`spawn_link(fun)` lub `spawn_link(moduł, funkcja, lista_argumentów)` = spawn + link
 
-exit(powód) zatrzymuje obecny proces
-exit(PID, powód) zatrzymuje wybrany proces
+`exit(powód)` zatrzymuje obecny proces
+`exit(PID, powód)` zatrzymuje wybrany proces
 
 Przykład działania:
+```
 % przodek tworzy potomka z linkiem, który po 2 sekundach powinien wypisać komunikat
 Parent = self(),
 Child = spawn_link(fun() ->
@@ -158,11 +164,11 @@ exit(Child, kill),
 io:format("Parent: exit(Child, kill)~n"),
 timer:sleep(1000),
 io:format("Parent finished work~n").
-
+```
 -----------------
 
-process_flag(trap_exit, true) zamienia sygnały EXIT w zwykłe wiadomości. Dzięki temu możemy je obsłużyć w receive.
-
+`process_flag(trap_exit, true)` zamienia sygnały EXIT w zwykłe wiadomości. Dzięki temu możemy je obsłużyć w receive.
+```
 % ustawiamy flagę trap_exit na true
 process_flag(trap_exit, true),
 % przodek tworzy potomka z linkiem, który po sekundzie wymusza zatrzymanie
@@ -182,11 +188,12 @@ after 2000 ->
 end,
 
 io:format("Parent: end~n").
-
+```
 -------------------
 
-monitor(PID, fun) lub spawn_monitor(fun) lub spawn_monitor(moduł, funkcja, lista_argumentów)
-
+`monitor(PID, fun)` lub `spawn_monitor(fun)` lub `spawn_monitor(moduł, funkcja, lista_argumentów)`
+pozwala procesowi obserwować wybrany proces, i gdy ten wymusi zatrzymanie, monitorujący dostanie wiadomość w formacie `{'DOWN', Ref, process, Pid2, Reason}`
+```
 % przodek tworzy potomka z monitorem, który po sekundzie wymusza zatrzymanie
 {Child, Ref} = spawn_monitor(fun() ->
     timer:sleep(1000),
@@ -204,12 +211,13 @@ after 2000 ->
 end,
 
 io:format("Parent: end~n").
-
+```
 
 Zadanie:
 Połączcie moduł serwera i klienta w jeden moduł. Zróbcie tak, żeby serwer po zabiciu automatycznie się wskrzeszał (zostawcie też jakiś sposób na wyłączenie serwera).
 
 przykład:
+```
 2> Server = restarter:start().
 <0.87.0>
 3> restarter:client("Hello", uppercase).
@@ -218,39 +226,41 @@ przykład:
 true
 5> restarter:client("Hello", uppercase).
 "HELLO"
-
+```
 --------------------------------------
 
 Programowanie rozproszone:
 
-Aby komputery mogły komunikować się ze sobą w Erlangu, muszą mieć taką samą zawartość pliku .erlang.cookie
+Aby komputery mogły komunikować się ze sobą w Erlangu, muszą mieć taką samą zawartość pliku `.erlang.cookie`
 Lokalizacja:
-Windows: zmienna środowiskowa $HOME, można sprawdzić za pomocą init:get_argument(home).
+Windows: zmienna środowiskowa `$HOME`, można sprawdzić za pomocą `init:get_argument(home).`
 Linux: katalog domowy.
 Na Linux'ie muszą być konkretne uprawnienia:
-chmod 400 .erlang.cookie
+`chmod 400 .erlang.cookie`
 
-W pliku .erlang.cookie napisać jeden wyraz: atom, który będzie identyczny dla wszyskich komputerów, które chcą się ze sobą komunikować.
+W pliku `.erlang.cookie` powinien być jeden wyraz: atom, który będzie identyczny dla wszyskich komputerów, które chcą się ze sobą komunikować.
 
-Można (dla programowania rozproszonego nawet trzeba) uruchomić erlang'a z parametrem -name <erl_name@IP>, gdzie erl_name = wybrana nazwa użytkownika, np.:
-> erl -name lab94@192.168.128.94
+Można (dla programowania rozproszonego nawet trzeba) uruchomić erlang'a z parametrem `-name <erl_name@IP>`, gdzie erl_name = wybrana nazwa użytkownika, np.:
+`> erl -name lab94@192.168.128.94`
 
 Najłatwiej uruchomić erlang'a z już ustawioną nazwą i cookie:
-> erl -name <erl_name@IP> -setcookie <cookie>
+`> erl -name <erl_name@IP> -setcookie <cookie>`
+
 -------------------------------------
 Jeśli wysyłamy wiadomości między systemami i używamy atomów zamiast Pid'ów z register/2, to zamiast
-registered_name ! Message
+`registered_name ! Message`
 jest
-{registered_name, node_name}, czyli atom uzyskany z register/2 i nazwa komputera z -name
+`{registered_name, node_name} ! Message`, czyli atom uzyskany z register/2 i nazwa komputera z -name
 
-System Erlanga podłączony do sieci nazywa się node (węzeł).
+Maszyna wirtualna Erlang'a podłączona do sieci nazywa się node (węzeł).
+
 --------------------------------------
-======================================
-======================================
+
 Przykładowy moduł rozproszony: czat grupowy
+Uwaga: przed kompilacją musimy ustawić faktyczną nazwę node'a serwera w kodzie.
 
 ----------------------
-
+```
 -module(discord).
 -export([start/0, server/1, logon/1, logoff/0, send/1, client/2, stop/0]).
 
@@ -381,9 +391,9 @@ await_result() ->
         {discord, What} ->  % Normal response
             io:format("~p~n", [What])
     end.
+```
 
-=====================================
-=====================================
-=====================================
+------------------
+
 Zadanie dodatkowe:
 Napiszcie moduł, który: startuje 5 workerów, monitoruje ich (każdy ma swój Ref), a kiedy jakiś padnie, to wypisuje jego PID i Reason.
