@@ -213,6 +213,8 @@ end,
 io:format("Parent: end~n").
 ```
 
+---------------
+
 Zadanie:
 Połączcie moduł serwera i klienta w jeden moduł. Zróbcie tak, żeby serwer po zabiciu automatycznie się wskrzeszał (zostawcie też jakiś sposób na wyłączenie serwera).
 
@@ -227,7 +229,7 @@ true
 5> restarter:client("Hello", uppercase).
 "HELLO"
 ```
---------------------------------------
+-----------------------
 
 Programowanie rozproszone:
 
@@ -240,13 +242,13 @@ Na Linux'ie muszą być konkretne uprawnienia:
 
 W pliku `.erlang.cookie` powinien być jeden wyraz: atom, który będzie identyczny dla wszyskich komputerów, które chcą się ze sobą komunikować.
 
-Można (dla programowania rozproszonego nawet trzeba) uruchomić erlang'a z parametrem `-name <erl_name@IP>`, gdzie erl_name = wybrana nazwa użytkownika, np.:
+Można (dla programowania rozproszonego nawet trzeba) uruchomić erlang'a z parametrem `-name erl_name@IP`, gdzie erl_name = wybrana nazwa użytkownika, np.:
 `> erl -name lab94@192.168.128.94`
 
 Najłatwiej uruchomić erlang'a z już ustawioną nazwą i cookie:
-`> erl -name <erl_name@IP> -setcookie <cookie>`
+`> erl -name erl_name@IP -setcookie <cookie>`
 
--------------------------------------
+----------------------
 Jeśli wysyłamy wiadomości między systemami i używamy atomów zamiast Pid'ów z register/2, to zamiast
 `registered_name ! Message`
 jest
@@ -254,7 +256,7 @@ jest
 
 Maszyna wirtualna Erlang'a podłączona do sieci nazywa się node (węzeł).
 
---------------------------------------
+----------------------
 
 Przykładowy moduł rozproszony: czat grupowy
 Uwaga: przed kompilacją musimy ustawić faktyczną nazwę node'a serwera w kodzie.
