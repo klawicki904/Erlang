@@ -231,6 +231,11 @@ true
 ```
 -----------------------
 
+Zadanie dodatkowe:
+Napiszcie moduł, który: startuje 5 procesów-workerów, monitoruje ich (każdy ma swój Ref), a kiedy jakiś padnie, to wypisuje jego PID i Reason.
+
+-----------------------
+
 Programowanie rozproszone:
 
 Aby komputery mogły komunikować się ze sobą w Erlangu, muszą mieć taką samą zawartość pliku `.erlang.cookie`
@@ -394,8 +399,3 @@ await_result() ->
             io:format("~p~n", [What])
     end.
 ```
-
-------------------
-
-Zadanie dodatkowe:
-Napiszcie moduł, który: startuje 5 workerów, monitoruje ich (każdy ma swój Ref), a kiedy jakiś padnie, to wypisuje jego PID i Reason.
