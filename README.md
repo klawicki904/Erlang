@@ -134,8 +134,11 @@ Pong finished
 
 `registered()` zwraca listę zarejestrowanych nazw.
 
+--------------------
+
 Zadanie:
 Przeróbcie zadanie z ping i pong tak, żeby ping był wywoływany z jednym argumentem N, bez Pong_PID (użyć funkcji register).
+
 --------------------
 
 Link, awarie, monitor:
