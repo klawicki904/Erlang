@@ -17,8 +17,9 @@ lub `spawn(moduł, funkcja, lista_argumentów)`:
 
 spawn zwraca ID procesu (PID)
 
-```
 Przykładowy moduł:
+
+```
 -module(spawndemo).
 -export([start/0, say/2]).
 
@@ -428,15 +429,15 @@ true
 klient:
 
 ```
-(karol1@192.168.100.128)3> c(discord).
+(karol2@192.168.100.128)3> c(discord).
 {ok,discord}
-(karol2@192.168.100.128)4> discord:logon('karol1@192.168.100.128', karol2).
+(karol2@192.168.100.128)4> discord:logon('karol1@192.168.100.128', k2).
 true
 logged_on
 (karol2@192.168.100.128)5> discord:send("Hello").
 sent
 ok
-karol2: Hello
+k2: Hello
 karol1 joined the chat
 karol1: Test
 karol1 left the chat
