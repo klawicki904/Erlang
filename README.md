@@ -1,15 +1,22 @@
 ## Erlang, podstawy programowania równoległego (concurrent) i rozproszonego (distributed).
 
+dokumentacja: https://www.erlang.org/doc/system/conc_prog.html
+
 ### Procesy i komunikacja:
 
 Proces w Erlangu = lekki, niezależny wątek w maszynie wirtualnej.
 Możemy zobaczyć listę obecnie aktywnych procesów (tylko PIDy) używając funkcji:
 `processes().`
 Do tworzenia procesu używamy `spawn(fun)`:
+
 `spawn(fun() -> io:format("hello~n") end ).`
+
 lub `spawn(moduł, funkcja, lista_argumentów)`:
+
 `spawn(server, loop, []).`
+
 spawn zwraca ID procesu (PID)
+
 ```
 Przykładowy moduł:
 -module(spawndemo).
