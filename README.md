@@ -283,16 +283,11 @@ Maszyna wirtualna Erlang'a podłączona do sieci nazywa się node (węzeł).
 ----------------------
 
 Przykładowy moduł rozproszony: czat grupowy
-Uwaga: przed kompilacją musimy ustawić faktyczną nazwę node'a serwera w kodzie.
 
 ----------------------
 ```
 -module(discord).
--export([start/0, server/1, logon/1, logoff/0, send/1, client/2, stop/0]).
-
-%%% Change the function below to return the name of the node where the server runs
-server_node() ->
-    'server_erl_name@server_IP_Address'.
+-export([start/0, server/1, logon/2, logoff/0, send/1, client/2, stop/0]).
 
 stop() -> exit(self()).
     
@@ -367,11 +362,11 @@ broadcast_system_msg(FromName, Info, User_List) ->
 
 
 %%% User Commands
-logon(Name) ->
+logon(Server_Node, Name) ->
     case whereis(mess_client) of
         undefined ->
             register(mess_client,
-                     spawn(discord, client, [server_node(), Name]));
+                     spawn(discord, client, [Server_Node, Name]));
         _ -> already_logged_on
     end.
 
@@ -417,4 +412,34 @@ await_result() ->
         {discord, What} ->  % Normal response
             io:format("~p~n", [What])
     end.
+```
+
+Przykładowe uruchomienie:
+
+serwer:
+
+```
+(karol1@192.168.100.128)2> c(discord).
+{ok,discord}
+(karol1@192.168.100.128)3> discord:start().
+true
+```
+
+klient:
+
+```
+(karol1@192.168.100.128)3> c(discord).
+{ok,discord}
+(karol2@192.168.100.128)4> discord:logon('karol1@192.168.100.128', karol2).
+true
+logged_on
+(karol2@192.168.100.128)5> discord:send("Hello").
+sent
+ok
+karol2: Hello
+karol1 joined the chat
+karol1: Test
+karol1 left the chat
+(karol2@192.168.100.128)6> discord:logoff().
+logoff
 ```
