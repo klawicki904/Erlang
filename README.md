@@ -51,7 +51,9 @@ end.
 `self()` zwraca ID procesu (PID).
 
 Do wysyłania wiadomości używamy operatora `!` w formacie `Pid ! Wiadomość`
+
 np.
+
 `receive {Client, {Str, echo}} -> Client ! {self(), Str} end.`
 
 Przykładowy serwer:
@@ -114,12 +116,19 @@ Przykładowe uruchomienie klienta:
 ---------------------
 
 Zadanie:
+
 Moduł będzie miał 3 funkcje:
+
 start(), ping(N, Pong_PID), pong().
+
 Po wywołaniu start():
+
 Ping wysyła wiadomość do pong, pong odbiera wiadomość i wyświetla `Pong received ping`.
+
 Pong odsyła wiadomość do ping. Ping odbiera wiadomość i wyświetla `Ping received pong`.
+
 Powtarza się jeszcze 2 (N-1) razy (można ustawić na sztywno liczbę razy w start lub zrobić start z jednym argumentem).
+
 Na koniec oba procesy kończą działanie.
 
 przykład:
